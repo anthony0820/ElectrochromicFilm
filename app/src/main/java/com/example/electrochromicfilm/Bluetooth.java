@@ -1,30 +1,23 @@
 package com.example.electrochromicfilm;
 
-import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Set;
 
 public class Bluetooth extends AppCompatActivity {
+
     Button b1, b2, b3, b4;
     private BluetoothAdapter BA;
     private Set<BluetoothDevice> pairedDevices;
@@ -36,10 +29,10 @@ public class Bluetooth extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.bluetoothactivity);
 
-        b1 = (Button) findViewById(R.id.button);
-        b2 = (Button) findViewById(R.id.button2);
-        b3 = (Button) findViewById(R.id.button3);
-        b4 = (Button) findViewById(R.id.button4);
+        b1 = (Button) findViewById(R.id.turn_on_button);
+        b2 = (Button) findViewById(R.id.get_visible_button);
+        b3 = (Button) findViewById(R.id.list_devices_button);
+        b4 = (Button) findViewById(R.id.off_button);
 
         BA = BluetoothAdapter.getDefaultAdapter();
         lv = (ListView) findViewById(R.id.devicelist);
@@ -89,6 +82,9 @@ public class Bluetooth extends AppCompatActivity {
         });
 
     }
+
+
+
 }
 
 

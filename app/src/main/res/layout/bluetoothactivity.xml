@@ -15,43 +15,43 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/turn_on_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="on"
         android:text="Turn On"
-        app:layout_constraintBottom_toTopOf="@+id/button3"
-        app:layout_constraintEnd_toStartOf="@+id/button2"
+        app:layout_constraintBottom_toTopOf="@+id/list_devices_button"
+        app:layout_constraintEnd_toStartOf="@+id/get_visible_button"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/get_visible_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="visible"
         android:text="Get Visible"
-        app:layout_constraintBottom_toTopOf="@+id/button4"
+        app:layout_constraintBottom_toTopOf="@+id/off_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/button"
+        app:layout_constraintStart_toEndOf="@+id/turn_on_button"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/list_devices_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="list"
         android:text="List Devices"
         app:layout_constraintBottom_toTopOf="@+id/devicelist"
-        app:layout_constraintEnd_toStartOf="@+id/button4"
+        app:layout_constraintEnd_toStartOf="@+id/off_button"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button" />
+        app:layout_constraintTop_toBottomOf="@+id/turn_on_button" />
 
     <Button
-        android:id="@+id/button4"
+        android:id="@+id/off_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="off"
@@ -59,7 +59,7 @@
         app:layout_constraintBottom_toTopOf="@+id/devicelist"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/button3"
-        app:layout_constraintTop_toBottomOf="@+id/button2" />
+        app:layout_constraintStart_toEndOf="@+id/list_devices_button"
+        app:layout_constraintTop_toBottomOf="@+id/get_visible_button" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
