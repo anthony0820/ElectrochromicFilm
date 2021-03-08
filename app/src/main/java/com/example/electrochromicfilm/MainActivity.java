@@ -38,7 +38,23 @@ public class MainActivity extends AppCompatActivity {
         front_passenger_window.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, Bluetooth.class);
+                Intent intent = new Intent(MainActivity.this, Scrollbar.class);
+                startActivity(intent);
+            }
+        });
+        back_driver_window = (ImageView) findViewById(R.id.back_driver_window);
+        back_driver_window.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, Scrollbar.class);
+                startActivity(intent);
+            }
+        });
+        back_passenger_window = (ImageView) findViewById(R.id.back_passenger_window);
+        back_passenger_window.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, Scrollbar.class);
                 startActivity(intent);
             }
         });
