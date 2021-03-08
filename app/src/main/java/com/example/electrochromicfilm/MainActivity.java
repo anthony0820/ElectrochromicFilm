@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.Activity;
 import android.content.Intent;
 import android.media.Image;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.os.Bundle;
@@ -12,16 +13,25 @@ import android.view.WindowManager;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String TAG = "DEBUGGING_TAG";
     private ImageView front_driver_window;
     private ImageView front_passenger_window;
     private ImageView back_driver_window;
     private ImageView back_passenger_window;
+    String deviceAddress;
+    String deviceName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Transfers data to this activity, but maybe we can still see this information when we go
+        // the next activity instead of having to bundle everything again
+        Bundle bundle = getIntent().getExtras();
+        deviceName = bundle.getString("device");
+        deviceAddress = bundle.getString("address");
+        Log.i(TAG, deviceName + ": " + deviceAddress);
         initListeners();
     }
 
@@ -31,6 +41,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, Scrollbar.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("address", deviceAddress);
+                intent.putExtras(bundle);
                 startActivity(intent);
             }
         });
