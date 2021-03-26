@@ -90,8 +90,8 @@ public class Scrollbar extends AppCompatActivity {
         if (btSocket != null) {
             try {
                 // This may not work. May have to turn the tintValue into bytes (next line)
-                //btSocket.getOutputStream().write((byte) tintValue);
-                btSocket.getOutputStream().write(tintValue);
+                btSocket.getOutputStream().write((byte) tintValue);
+                //btSocket.getOutputStream().write(tintValue);
             } catch (IOException e) {
                 Toast.makeText(getApplicationContext(), "Write Attempt Failed", Toast.LENGTH_SHORT).show();
             }

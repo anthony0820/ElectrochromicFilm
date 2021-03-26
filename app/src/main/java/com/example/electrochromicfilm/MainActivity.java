@@ -1,5 +1,4 @@
 package com.example.electrochromicfilm;
-
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;

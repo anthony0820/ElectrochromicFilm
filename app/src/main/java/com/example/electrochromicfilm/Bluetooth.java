@@ -1,5 +1,4 @@
 package com.example.electrochromicfilm;
-
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
@@ -80,7 +79,6 @@ public class Bluetooth extends AppCompatActivity {
         final ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, list);
         lv.setAdapter(adapter);
         setDeviceListener();
-
     }
 
     // This is what happens when a device from the list is selected
@@ -98,11 +96,7 @@ public class Bluetooth extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
     }
-
-
-
 }
 
 

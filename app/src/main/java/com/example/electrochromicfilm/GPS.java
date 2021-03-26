@@ -1,11 +1,23 @@
 package com.example.electrochromicfilm;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Application;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Bundle;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -17,7 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class GPS extends Activity {
+public class GPS extends AppCompatActivity {
 
     private Geocoder geocoder;
     private LocationManager locationManager;
@@ -33,21 +45,62 @@ public class GPS extends Activity {
     private double latitude;
 
     private Address retrievedAddress;
-    private Context mContext;
+    private Context context;
     private String state;
+    TextView stateView;
 
-    public GPS(Context mContext) {
-        this.mContext = mContext;
-        locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-        location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        longitude = location.getLongitude();
-        latitude = location.getLatitude();
 
+    @SuppressLint("MissingPermission") // This allows us to not have to check for permissions
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.gps_activity); // Set up a GPS activity
+
+        stateView = (TextView) findViewById(R.id.state_textview);
+
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        // We may have to check if GPS functionality is enabled. The suppress line above should avoid it though.
+        LocationListener locationListener = new MyLocationListener();
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 0, locationListener);
     }
+
+    private class MyLocationListener implements LocationListener{
+
+        @Override
+        public void onLocationChanged(@NonNull Location location) {
+            Toast.makeText(getApplicationContext(), "Location change update", Toast.LENGTH_SHORT).show();
+            longitude = location.getLongitude();
+            latitude = location.getLatitude();
+
+            /*--------------- Determine State using Coordinates ---------------*/
+            List <Address> addresses;
+            geocoder = new Geocoder(getApplicationContext(), Locale.getDefault()); // Sets up the geocoder. Locale sets the locality to the USA
+            String state;
+            try {
+                addresses = geocoder.getFromLocation(latitude, longitude, 1);
+                if (addresses.size() > 0){
+                    state = addresses.get(0).getAdminArea();
+                    stateView.setText(state);
+                }
+            } catch (IOException e){
+                e.printStackTrace();
+                Toast.makeText(getApplicationContext(), "No address was found", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+//    public GPS(Context mContext) {
+//        this.context = mContext;
+//        locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+//        location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+//        longitude = location.getLongitude();
+//        latitude = location.getLatitude();
+//
+//    }
 
     private void setStateAndTint() {
 
-        geocoder = new Geocoder(mContext, Locale.getDefault());
+        geocoder = new Geocoder(context, Locale.getDefault());
 
         try {
             addresses = geocoder.getFromLocation(latitude, longitude, 1);
