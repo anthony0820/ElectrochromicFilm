@@ -1,172 +1,96 @@
 package com.example.electrochromicfilm;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.app.Application;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
+import android.provider.Settings;
+import 	androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
+import android.location.Address;
+import android.location.Geocoder;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+
 public class GPS extends AppCompatActivity {
-
-    private Geocoder geocoder;
-    private LocationManager locationManager;
-    private Location location;
-
-    private List<Address> addresses;
-
-    private int frontSidePercent;
-    private int backSidePercent;
-    private int rearPercent;
-
-    private double longitude;
-    private double latitude;
-
-    private Address retrievedAddress;
-    private Context context;
-    private String state;
-    TextView stateView;
-
-
-    @SuppressLint("MissingPermission") // This allows us to not have to check for permissions
+    private static final int REQUEST_LOCATION = 1;
+    Button btnGetLocation;
+    TextView showLocation;
+    LocationManager locationManager;
+    double latitude, longitude;
+    TextView showState;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.gps_activity); // Set up a GPS activity
-
-        stateView = (TextView) findViewById(R.id.state_textview);
-
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        // We may have to check if GPS functionality is enabled. The suppress line above should avoid it though.
-        LocationListener locationListener = new MyLocationListener();
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 0, locationListener);
-    }
-
-    private class MyLocationListener implements LocationListener{
-
-        @Override
-        public void onLocationChanged(@NonNull Location location) {
-            Toast.makeText(getApplicationContext(), "Location change update", Toast.LENGTH_SHORT).show();
-            longitude = location.getLongitude();
-            latitude = location.getLatitude();
-
-            /*--------------- Determine State using Coordinates ---------------*/
-            List <Address> addresses;
-            geocoder = new Geocoder(getApplicationContext(), Locale.getDefault()); // Sets up the geocoder. Locale sets the locality to the USA
-            String state;
-            try {
-                addresses = geocoder.getFromLocation(latitude, longitude, 1);
-                if (addresses.size() > 0){
-                    state = addresses.get(0).getAdminArea();
-                    stateView.setText(state);
+        setContentView(R.layout.gps_activity);
+        ActivityCompat.requestPermissions( this,
+                new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
+        showLocation = findViewById(R.id.showLocation);
+        btnGetLocation = findViewById(R.id.btnGetLocation);
+        showState = findViewById(R.id.stateName);
+        btnGetLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                    OnGPS();
+                } else {
+                    getLocation();
                 }
-            } catch (IOException e){
+            }
+        });
+    }
+    private void OnGPS() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Enable GPS").setCancelable(false).setPositiveButton("Yes", new  DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+            }
+        }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        final AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+    private void getLocation() {
+        if (ActivityCompat.checkSelfPermission(
+                GPS.this,Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                GPS.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
+        } else {
+            Location locationGPS = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            if (locationGPS != null) {
+                latitude = locationGPS.getLatitude();
+                longitude = locationGPS.getLongitude();
+                showLocation.setText("Your Location: " + "\n" + "Latitude: " + latitude + "\n" + "Longitude: " + longitude);
+            } else {
+                Toast.makeText(this, "Unable to find location.", Toast.LENGTH_SHORT).show();
+            }
+            Geocoder geocoder = new Geocoder(this, Locale.ENGLISH);
+            try {
+                List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
+                String state = addresses.get(0).getAdminArea();
+                showState.setText(state);
+            } catch (IOException e) {
                 e.printStackTrace();
-                Toast.makeText(getApplicationContext(), "No address was found", Toast.LENGTH_SHORT).show();
+                showState.setText("Failure");
             }
         }
     }
-
-//    public GPS(Context mContext) {
-//        this.context = mContext;
-//        locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-//        location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-//        longitude = location.getLongitude();
-//        latitude = location.getLatitude();
-//
-//    }
-
-    private void setStateAndTint() {
-
-        geocoder = new Geocoder(context, Locale.getDefault());
-
-        try {
-            addresses = geocoder.getFromLocation(latitude, longitude, 1);
-            state = addresses.get(0).getAdminArea();
-            setTintLevels();
-            /*if(addresses.size() > 0) {
-                retrievedAddress = addresses.get(0);
-                StringBuilder strAddress = new StringBuilder();
-                for(int i = 0; i < retrievedAddress.getMaxAddressLineIndex(); i++) {
-                    strAddress.append(retrievedAddress.getAddressLine(i)).append(" ");
-                }
-            }*/
-        } catch (IOException | SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void setTintLevels() throws SQLException {
-        ArrayList<String> stateList = new ArrayList<>();
-        //DriverManager.registerDriver(new com.mysql.jbdc.Driver());
-        String mySqlUrl = "url";
-        Connection connection = DriverManager.getConnection(mySqlUrl, "root", "password");
-        Statement statement = connection.createStatement();
-        ResultSet rs = statement.executeQuery("Obtaining States");
-
-        //Sets Front Percent Tint Level
-        rs = statement.executeQuery("SELECT FrontSidePercent FROM TintRestrictions WHERE State = " + state);
-        while(rs.next()) frontSidePercent = rs.getInt("FrontSidePercent");
-        //Sets Back Percent Tint Level
-        rs = statement.executeQuery("SELECT BackSidePercent FROM TintRestrictions WHERE State = " + state);
-        while(rs.next()) backSidePercent = rs.getInt("BackSidePercent");
-        //Sets Rear Percent Tint Level
-        rs = statement.executeQuery("SELECT RearPercent FROM TintRestrictions WHERE State = " + state);
-        while(rs.next()) rearPercent = rs.getInt("RearPercent");
-    }
-
-    public Boolean stateChanged(String stateName) throws SQLException {
-        if(!stateName.equals(state)) {
-            setStateAndTint();
-            return true;
-        }
-        return false;
-
-    }
-    public int getFrontSidePercent() {
-        return frontSidePercent;
-    }
-
-    public int getBackSidePercent() {
-        return backSidePercent;
-    }
-
-    public int getBackPercent() {
-        return rearPercent;
-    }
-    public String getState() {
-        return state;
-    }
-
-    public double getLongitude() {
-        return longitude;
-    }
-
-    public double getLatitude() {
-        return latitude;
-    }
-
 }
-
