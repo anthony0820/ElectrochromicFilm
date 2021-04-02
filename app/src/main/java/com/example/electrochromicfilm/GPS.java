@@ -68,6 +68,7 @@ public class GPS extends AppCompatActivity {
         final AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
+
     private void getLocation() {
         if (ActivityCompat.checkSelfPermission(
                 GPS.this,Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
