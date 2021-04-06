@@ -144,7 +144,10 @@ public class Scrollbar extends AppCompatActivity {
         }
         if (btSocket != null) {
             try {
-                btSocket.getOutputStream().write((byte) tintValue); // Do math with maxTint and tintValue
+                Toast.makeText(getApplicationContext(), "TintValue: " + tintValue + ", maxTint: " + maxTint, Toast.LENGTH_SHORT).show();
+                double result = (tintValue * .01) * maxTint;
+                btSocket.getOutputStream().write((byte) result); // Do math with maxTint and tintValue
+                Toast.makeText(getApplicationContext(), "Data Written", Toast.LENGTH_SHORT).show();
             } catch (IOException e) {
                 Toast.makeText(getApplicationContext(), "Write Attempt Failed", Toast.LENGTH_SHORT).show();
             }
