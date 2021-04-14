@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,7 +19,8 @@ import java.util.Set;
 
 public class Bluetooth extends AppCompatActivity {
 
-    Button b1, b2, b3, b4;
+    ImageView b1,b3;
+    Button b2, b4;
     private BluetoothAdapter BA;
     private Set<BluetoothDevice> pairedDevices;
     ListView lv;
@@ -28,13 +30,15 @@ public class Bluetooth extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
         setContentView(R.layout.bluetoothactivity);
 
-        b1 = (Button) findViewById(R.id.turn_on_button);
-        b2 = (Button) findViewById(R.id.get_visible_button);
-        b3 = (Button) findViewById(R.id.list_devices_button);
-        b4 = (Button) findViewById(R.id.off_button);
-
+        b1 = (ImageView) findViewById(R.id.turn_on_button);
+//        b2 = (Button) findViewById(R.id.get_visible_button);
+        b3 = (ImageView) findViewById(R.id.list_devices_button);
+//        b4 = (Button) findViewById(R.id.off_button);
         BA = BluetoothAdapter.getDefaultAdapter();
         lv = (ListView) findViewById(R.id.devicelist);
     }
@@ -50,17 +54,17 @@ public class Bluetooth extends AppCompatActivity {
         }
     }
 
-    // Disable the bluetooth module
-    public void off(View v) {
-        BA.disable();
-        Toast.makeText(getApplicationContext(), "Turned off", Toast.LENGTH_LONG).show();
-    }
+//    // Disable the bluetooth module
+//    public void off(View v) {
+//        BA.disable();
+//        Toast.makeText(getApplicationContext(), "Turned off", Toast.LENGTH_LONG).show();
+//    }
 
-    // Get all visible bluetooth modules around
-    public void visible(View v) {
-        Intent getVisible = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-        startActivityForResult(getVisible, 0);
-    }
+//    // Get all visible bluetooth modules around
+//    public void visible(View v) {
+//        Intent getVisible = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+//        startActivityForResult(getVisible, 0);
+//    }
 
     // Creates a list of all visible bluetooth modules
     // Will later add buttons to each in order to click on one we wish to connect to

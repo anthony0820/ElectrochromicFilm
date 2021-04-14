@@ -28,7 +28,7 @@ public class About extends AppCompatActivity {
         homebutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(About.this, Home.class);
+                Intent intent = new Intent(About.this, Bluetooth.class);
                 startActivity(intent);
             }
         });
