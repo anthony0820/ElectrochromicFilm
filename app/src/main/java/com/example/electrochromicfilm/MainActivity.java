@@ -54,6 +54,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, Scrollbar.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("address", deviceAddress);
+                intent.putExtras(bundle);
                 startActivity(intent);
             }
         });
@@ -62,6 +65,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, Scrollbar.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("address", deviceAddress);
+                intent.putExtras(bundle);
                 startActivity(intent);
             }
         });
@@ -70,6 +76,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, Scrollbar.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("address", deviceAddress);
+                intent.putExtras(bundle);
                 startActivity(intent);
             }
         });
